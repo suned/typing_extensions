@@ -1623,23 +1623,24 @@ else:
             raise TypeError(f"type '{__name__}.TypeVar' is not an acceptable base type")
 
 
+class _Immutable:
+    """Mixin to indicate that object should not be copied."""
+
+    __slots__ = ()
+
+    def __copy__(self):
+        return self
+
+    def __deepcopy__(self, memo):
+        return self
+
+
 # Python 3.10+ has PEP 612
 if hasattr(typing, "ParamSpecArgs"):
     ParamSpecArgs = typing.ParamSpecArgs
     ParamSpecKwargs = typing.ParamSpecKwargs
 # 3.8-3.9
 else:
-
-    class _Immutable:
-        """Mixin to indicate that object should not be copied."""
-
-        __slots__ = ()
-
-        def __copy__(self):
-            return self
-
-        def __deepcopy__(self, memo):
-            return self
 
     class ParamSpecArgs(_Immutable):
         """The args for a ParamSpec object.
